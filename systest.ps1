@@ -140,5 +140,25 @@ echo $CurrentBatteryEstimate
     echo "Something went wrong with battery test"
 }
 
+Enable-WindowsOptionalFeature -Online -FeatureName "MediaPlayback" -All | SELECT Online
+
+start microsoft.windows.camera:
+sleep 10
+Stop-Process -Name "WindowsCamera" -Force
+
+
+$webcok = Read-Host "Did the webcam work ok? Please enter yes or no [yes]"
+
+if ($webcok -eq '') {
+    $webcok = 'yes'
+}
+
+if($webcok -ne 'yes') {
+    TestResultWrapper("Webcam test failed")
+    TestFailed
+} else {
+    TestResultWrapper("Webcam test passed")
+}
+
 echo "Test Finished"
 Read-Host "Press enter to finish"
