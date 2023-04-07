@@ -6,7 +6,7 @@
 }
 
 function TestFinished {
-    Set-ExecutionPolicy -ExecutionPolicy Default
+    Stop-Transcript
     Exit
 }
 
@@ -64,6 +64,12 @@ public class Audio {
 
 '@
 
+
+
+$transc_dir = $PSScriptRoot + "\log.txt"
+
+Start-Transcript -Path $transc_dir
+
 echo "Before starting this test, make sure the computer is connected to internet"
 $areyouready = 'yes'
 
@@ -78,6 +84,7 @@ if($areyouready -ne 'yes') {
     TestFailed
 }
 
+#Collect system data
 TestResultWrapper(Get-WmiObject win32_bios)
 TestResultWrapper(Get-WMIObject –class Win32_ComputerSystem)
 
@@ -90,6 +97,12 @@ if (Test-Connection www.google.com -quiet) {
     TestFailed
 }
 
+#install updates
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module -Name PSWindowsUpdate -Force
+Get-WindowsUpdate -AcceptAll -Install -ForceInstall
+
+#Test audio and video by playing youtube video
 echo "Testing audio and video playback"
 [audio]::Volume = 1
 start-process "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" https://www.youtube.com/watch?v=gte3BoXKwP0
@@ -140,8 +153,8 @@ echo $CurrentBatteryEstimate
     echo "Something went wrong with battery test"
 }
 
+#Check webcam
 Enable-WindowsOptionalFeature -Online -FeatureName "MediaPlayback" -All | SELECT Online
-
 start microsoft.windows.camera:
 sleep 10
 Stop-Process -Name "WindowsCamera" -Force
@@ -162,3 +175,4 @@ if($webcok -ne 'yes') {
 
 echo "Test Finished"
 Read-Host "Press enter to finish"
+TestFinished
