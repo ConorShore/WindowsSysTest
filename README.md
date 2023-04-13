@@ -1,6 +1,6 @@
 # WindowsSysTest
 
-Download the repo, then run start.bat as admin
+Download the repo, extract the downloaded zip file then run start.bat as admin
 
 # Current Features
 
