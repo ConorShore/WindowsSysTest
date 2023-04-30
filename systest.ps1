@@ -100,7 +100,7 @@ if (Test-Connection www.google.com -quiet) {
 #install updates
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name PSWindowsUpdate -Force
-Get-WindowsUpdate -AcceptAll -Install -ForceInstall
+Get-WindowsUpdate -AcceptAll -Install
 
 #Test audio and video by playing youtube video
 echo "Testing audio and video playback"
